@@ -1,10 +1,18 @@
+import re
 class Molekula(object):
 
     def __init__(self, sumarniVzorec):
         self.sumarniVzorec = sumarniVzorec
+
 #slovnik prvek : pocet prvku v molekule
     def PrvkuMlk(self):
         pocetPrvku = {}
+        for prvek, pocet in re.findall("([A-Z][a-z]*)([0-9]*)", self.sumarniVzorec):
+            if pocet == "":
+                pocetPrvku[prvek] = 1
+            else:
+                pocetPrvku[prvek] = int(pocet)
+            """
         for i in range(len(self.sumarniVzorec)):
             if self.sumarniVzorec[i].isnumeric():
                 continue
@@ -25,6 +33,7 @@ class Molekula(object):
                     pocetPrvku[self.sumarniVzorec[i]] = self.sumarniVzorec[i+1]
                 else:
                     pocetPrvku[self.sumarniVzorec[i]] = 1
+    """
         return pocetPrvku
 
     def pocetAtomu(self,symbol="None"):
@@ -32,11 +41,11 @@ class Molekula(object):
         if symbol == "None":
             soucet = 0
             for val in pocetPrvku.values():
-                soucet += int(val)
+                soucet += val
             return soucet
         else:
             if symbol in pocetPrvku.keys():
-                return int(pocetPrvku[symbol])
+                return pocetPrvku[symbol]
             else:
                 return "Molekula neobsahuje dany symbol"
 
@@ -59,7 +68,7 @@ class Molekula(object):
                 mlkHmotnsti[v[1]] = v2
         for i in pocetPrvku.items():
             prvek = i[0]
-            pocet = int(i[1])
+            pocet = i[1]
             celkHmotnost += mlkHmotnsti[prvek] * pocet
             celkHmotnost = float("{0:.4f}".format(celkHmotnost))
         return celkHmotnost

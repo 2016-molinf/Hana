@@ -6,6 +6,8 @@ from rdkit import Chem
 from rdkit.Chem import Draw
 
 from Chemdb.models import Structure
+from django.contrib import messages
+
 
 # Create your views here.
 
@@ -18,16 +20,23 @@ def structure_image(request, id):
     return response
 
 def index(request):
+
+    #print(Structure.objects.all())
     if request.method == "POST":
         #print(request.POST['mol'])
         mol = Structure.objects.values_list('mol')
-        r= (request.POST['mol'],)
-        print(r)
+        r = (request.POST['mol'],)
+        #print(r)
         #print(mol)
-        if r in mol or r == ('',):
+        if r in mol:
+            messages.warning(request,'Tato struktura je již v databázi')
+            #return {'error_messages': error_messages}
+        elif r == ('',):
             pass
         else:
             Structure(mol=request.POST['mol']).save()
+            messages.success(request, 'Struktura byla uložena do databáze')
 
     structures = Structure.objects.all()
+    #print(structures)
     return render(request, "Chemdb/structures.html", {"structures": structures})

@@ -15,6 +15,7 @@
 <link rel="stylesheet" href="http://www.w3schools.com/lib/w3.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
+
 <script type="text/javascript" language="javascript" src="static/jsme/jsme.nocache.js"></script>
 
 
@@ -116,8 +117,20 @@
   <a href="#">Link5</a>
 </div>
 
-
-
+<!--div class="w3-container"-->
+{% if messages %}
+<div class="w3-center">
+    {% for message in messages %}
+    {% if message.tags == "warning" %}
+        <p  class=w3-red >{{message}}</p>
+        {% endif %}
+        {% if message.tags == "success" %}
+        <p  class=w3-green >{{message}}</p>
+        {% endif %}
+    {% endfor %}
+</div>
+{% endif %}
+<!--/div-->
 
 	<!-- RECOMMENDED if your web app will not function without JavaScript enabled -->
 	<noscript>
@@ -138,20 +151,27 @@
     <button class="w3-btn w3-orange w3-border w3-round-xlarge">Odeslat</button>
 </form>
 <br>
+
 <table class="w3-table w3-bordered w3-striped w3-border w3-hoverable w3-card-4">
 
 <tr class="w3-orange">
-  <th>SMILES</th>
-  <th>Image</th>
-  <th>Molecular weight</th>
+    <th>ID</th>
+    <th>Image</th>
+    <th>Molecular weight</th>
+    <th>Molecular formula</th>
 </tr>
 
 {% for structure in structures %}
-<tr>
-	<td>{{structure.mol}}</td>
+
+<tr onclick="location.href='structures/{{structure.id}}'">
+
+	<td>{{structure.mol_id}}</td>
 	<td><img src="structures/{{structure.id}}"style="width:10%"></td>
-	<td>{{structure.mol_weight}}</td>
+	<td>{{structure.round_mol_weight}}</td>
+    <td>{{structure.mol_formula}}</td>
+
 </tr>
+
 {% endfor %}
 </table>
 

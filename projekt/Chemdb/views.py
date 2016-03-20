@@ -59,8 +59,12 @@ def insert(request):
             if form.is_valid():
                 messages.success(request, 'Soubor byl nahrán')
                 odpoved = handle_uploaded_file(request.FILES['file'],request.POST['type'] )
+                #if type(odpoved) is str:
+                ##
+                # else:
                 messages.success(request, str(odpoved[1]) +r' struktur uloženo do databáze')
                 messages.warning(request, str(odpoved[0]) +r' ze struktur je již v databázi')
+                messages.warning(request, str(odpoved[2]) +r' chybných řádek souboru')
                 #return HttpResponseRedirect('insert.html')
             else:
                 messages.warning(request,'Vyberte soubor')

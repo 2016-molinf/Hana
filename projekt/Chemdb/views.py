@@ -10,11 +10,14 @@ from rdkit.Chem import Draw
 from Chemdb.models import Structure
 from django.contrib import messages
 
+
 from django.http import HttpResponseRedirect
+from django.http import FileResponse
+
 from django.shortcuts import render
 from .forms import UploadFileForm
 # Imaginary function to handle an uploaded file.
-from .functions import handle_uploaded_file
+from .functions import handle_uploaded_file, handle_download_file
 
 
 # Create your views here.
@@ -28,6 +31,19 @@ def structure_image(request, id):
 
 
 def index(request):
+    if request.method == "POST":
+        print(request.POST)
+        #print(request.POST.getlist('mlk_id'))
+        if 'mlk_all' in request.POST.keys():
+            path, filename = handle_download_file(request.POST['mlk_all'])
+        elif 'mlk_id' in request.POST.keys():
+            path, filename = handle_download_file(request.POST.getlist('mlk_id'))
+        #with open(path, mode="r", encoding="utf-8") as f:
+            #response = HttpResponse(FileWrapper(f),content_type='application/download')
+        response = FileResponse(open(path, 'rb'),content_type='application/download')
+        response['Content-Disposition'] = 'attachment; filename={}'.format(filename)
+        return response
+    
     structures = Structure.objects.all()
     #print(structures)
     return render(request, "Chemdb/structures.html", {"structures": structures})

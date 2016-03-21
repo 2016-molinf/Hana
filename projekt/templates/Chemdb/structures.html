@@ -5,12 +5,37 @@
 <!-- with a "Quirks Mode" doctype is not supported. -->
 
 <html>
+<script>
+    function checkAll(ele) {
+        var checkboxes = document.getElementsByName('mlk_id');
+        if (ele.checked) {
+            for (var i = 0; i < checkboxes.length; i++) {
+                if (checkboxes[i].type == 'checkbox') {
+                    checkboxes[i].checked = true;
+                    checkboxes[i].disabled = true;
+
+
+                }
+            }
+        } else {
+            for (var i = 0; i < checkboxes.length; i++) {
+
+                if (checkboxes[i].type == 'checkbox') {
+                    checkboxes[i].checked = false;
+                    checkboxes[i].disabled = false;
+                }
+            }
+        }
+    }
+
+</script>
+
 <head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 
 <title>Chemdb demo page</title>
 
-
+<link href="static/css/w3.css" rel="stylesheet" type="text/css">
 <link rel="stylesheet" href="http://www.w3schools.com/lib/w3.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
@@ -39,10 +64,11 @@
 </div>
 
 
-
+<form method="POST">
 <table class="w3-table w3-bordered w3-striped w3-border w3-hoverable w3-card-4">
 
 <tr class="w3-orange">
+    <th><input id="input-select-all" class="w3-check" type="checkbox" name="mlk_all" id="mlk_all"  value="all"  onchange="checkAll(this)" /></th>
     <th>ID</th>
     <th>Image</th>
     <th>Molecular weight</th>
@@ -51,12 +77,13 @@
 
 {% for structure in structures %}
 
-<tr onclick="location.href='structures/{{structure.id}}'">
+<tr >
 
-	<td>{{structure.mol_id}}</td>
-	<td><img src="structures/{{structure.id}}"style="width:10%"></td>
-	<td>{{structure.round_mol_weight}}</td>
-    <td>{{structure.mol_formula}}</td>
+	<td ><input class="w3-check" type="checkbox" name="mlk_id"  value="{{ structure.id }}"  /></td>
+    <td onclick="location.href='structures/{{structure.id}}'">{{structure.mol_id}}</td>
+	<td onclick="location.href='structures/{{structure.id}}'"><img src="structures/{{structure.id}}"style="width:10%"></td>
+	<td onclick="location.href='structures/{{structure.id}}'">{{structure.round_mol_weight}}</td>
+    <td onclick="location.href='structures/{{structure.id}}'">{{structure.mol_formula}}</td>
 
 
 </tr>
@@ -64,7 +91,17 @@
 {% endfor %}
 </table>
 
-
+<div class="w3-container w3-right-align">
+    <br>
+    {% csrf_token %}
+    <button class="w3-btn w3-orange w3-border w3-round ">Stáhnout vybrané molekuly</button>
+</div>
+</form>
+<footer class="w3-center w3-small">
+  <p>Posted by: Hege Refsnes</p>
+  <p>Contact information: <a href="mailto:someone@example.com">
+  someone@example.com</a>.</p>
+</footer>
 
 </body>
 </html>

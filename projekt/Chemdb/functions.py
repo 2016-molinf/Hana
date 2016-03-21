@@ -35,5 +35,30 @@ def handle_uploaded_file(file, type):
                         odpoved[1] += 1
     return odpoved
 
+def handle_download_file(request):
+    folder = "media/"
+    #print(request)
+    if request == 'all':
+        mlk = Structure.objects.all()
+        filename = "Chemdb_all.sdf"
+    elif len(request) == 1:
+        mlk = Structure.objects.filter(id=int(request[0]))
+        filename = "Chemdb_MINF-HD-{}.sdf".format(mlk[0].id)
+    else:
+
+        mlk = Structure.objects.filter(id__in=request)
+        filename = "Chemdb_{}_struktur.sdf".format(len(mlk))
+
+    path = folder + filename
+    writer = Chem.SDWriter(path)
+    for m in mlk:
+        m = Chem.MolFromSmiles(m.mol)
+        #m = Chem.MolToMolBlock(m)
+        #print(m)
+        writer.write(m)
+    writer.close()
+    return path, filename
+
+
 
 

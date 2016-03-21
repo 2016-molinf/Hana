@@ -52,7 +52,7 @@ def handle_download_file(request):
     path = folder + filename
     writer = Chem.SDWriter(path)
     for m in mlk:
-        m = Chem.MolFromSmiles(m.mol)
+        m = Chem.MolFromSmiles(str(m.mol))
         #m = Chem.MolToMolBlock(m)
         #print(m)
         writer.write(m)

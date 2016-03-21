@@ -31,20 +31,21 @@ def structure_image(request, id):
 
 
 def index(request):
-    if request.method == "POST":
-        print(request.POST)
-        #print(request.POST.getlist('mlk_id'))
-        if 'mlk_all' in request.POST.keys():
-            path, filename = handle_download_file(request.POST['mlk_all'])
-        elif 'mlk_id' in request.POST.keys():
-            path, filename = handle_download_file(request.POST.getlist('mlk_id'))
-        #with open(path, mode="r", encoding="utf-8") as f:
-            #response = HttpResponse(FileWrapper(f),content_type='application/download')
-        response = FileResponse(open(path, 'rb'),content_type='application/download')
-        response['Content-Disposition'] = 'attachment; filename={}'.format(filename)
-        return response
-    
     structures = Structure.objects.all()
+    if request.method == "POST":
+        #print(request.POST)
+        if 'mlk_all' in request.POST.keys() or 'mlk_id' in request.POST.keys():
+            if 'mlk_all' in request.POST.keys():
+                path, filename = handle_download_file(request.POST['mlk_all'])
+            elif 'mlk_id' in request.POST.keys():
+                path, filename = handle_download_file(request.POST.getlist('mlk_id'))
+            #with open(path, mode="r", encoding="utf-8") as f:
+                #response = HttpResponse(FileWrapper(f),content_type='application/download')
+            response = FileResponse(open(path, 'rb'),content_type='application/download')
+            response['Content-Disposition'] = 'attachment; filename={}'.format(filename)
+            return response
+
+
     #print(structures)
     return render(request, "Chemdb/structures.html", {"structures": structures})
 

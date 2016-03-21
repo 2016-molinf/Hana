@@ -3,6 +3,7 @@
 from Chemdb.models import Structure
 from rdkit import Chem
 
+
 def handle_uploaded_file(file, type):
     with open('media/tmp.txt', 'wb+') as destination:
         for chunk in file.chunks():
@@ -58,6 +59,8 @@ def handle_download_file(request):
         writer.write(m)
     writer.close()
     return path, filename
+
+
 
 
 

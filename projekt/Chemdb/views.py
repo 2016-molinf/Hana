@@ -54,7 +54,7 @@ def insert(request):
         #print(Structure.objects.all())
     if request.method == "POST":
         #print(request.POST)
-        #print(request.FILES)
+        print(request.FILES)
         if 'mol' in request.POST.keys():
             mol = Structure.objects.values_list('mol')
             r = (request.POST['mol'],)
@@ -84,7 +84,7 @@ def insert(request):
                 messages.warning(request, str(odpoved[2]) +r' chybných řádek souboru')
                 #return HttpResponseRedirect('insert.html')
             else:
-                messages.warning(request,'Vyberte soubor')
+                messages.warning(request,'Vyberte správný soubor')
                 form = UploadFileForm()
     else:
         form = UploadFileForm()

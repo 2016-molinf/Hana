@@ -6,26 +6,34 @@ from rdkit import Chem
 
 def handle_uploaded_file(file, type):
     with open('media/tmp.txt', 'wb+') as destination:
+        if type == 'SMILES':
+            destination.write(b'hlavicka\n')
         for chunk in file.chunks():
             destination.write(chunk)
 
     odpoved = [0,0,0]
-    mol = Structure.objects.values_list('mol')
+
+    #print(mol)
     if type == 'SMILES':
-        with open('media/tmp.txt', 'r') as soubor:
-            for radka in soubor:
-                if (radka,) in mol or radka == '':
+        soubor = Chem.SmilesMolSupplier('media/tmp.txt')
+        for mlk in soubor:
+            mol = Structure.objects.values_list('mol')
+            try:
+                mlk = Chem.MolToInchi(mlk)
+            except:
+                odpoved[2] += 1
+            else:
+                if (mlk,) in mol :
                     odpoved[0] += 1
-                elif Chem.MolFromSmiles(radka) == None:
-                    odpoved[2] += 1
                 else:
-                    Structure(mol=radka).save()
-                    odpoved[1] += 1
+                        Structure(mol=mlk).save()
+                        odpoved[1] += 1
     else:
         soubor = Chem.SDMolSupplier('media/tmp.txt')
         for mlk in soubor:
+            mol = Structure.objects.values_list('mol')
             try:
-                mlk = Chem.MolToSmiles(mlk)
+                mlk = Chem.MolToInchi(mlk)
             except:
                 odpoved[2] += 1
             else:

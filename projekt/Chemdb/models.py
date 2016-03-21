@@ -23,7 +23,7 @@ class Structure(models.Model):
     """
     def save(self):
         #print(self.mol)
-        a = Chem.MolFromSmiles(str(self.mol))
+        a = Chem.MolFromInchi(str(self.mol))
         self.mol_weight = MolWt(a)
         self.mol_formula = CalcMolFormula(a)
         #print(self.mol_formula)

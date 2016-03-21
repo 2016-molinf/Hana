@@ -23,7 +23,7 @@ from .functions import handle_uploaded_file, handle_download_file
 # Create your views here.
 def structure_image(request, id):
     mol_obj = get_object_or_404(Structure, id=id)
-    mol = Chem.MolFromSmiles(str(mol_obj.mol))
+    mol = Chem.MolFromInchi(str(mol_obj.mol))
     image = Draw.MolToImage(mol)
     response = HttpResponse(content_type="image/png")
     image.save(response,"PNG")
@@ -57,7 +57,8 @@ def insert(request):
         print(request.FILES)
         if 'mol' in request.POST.keys():
             mol = Structure.objects.values_list('mol')
-            r = (request.POST['mol'],)
+            smi = Chem.MolFromSmiles(request.POST['mol'])
+            r = (Chem.MolToInchi(smi),)
             #print(r)
             #print(mol)
             if r in mol:
@@ -66,7 +67,7 @@ def insert(request):
             elif r == ('',):
                 pass
             else:
-                Structure(mol=request.POST['mol']).save()
+                Structure(mol=Chem.MolToInchi(smi).save())
                 messages.success(request, r'Struktura byla uložena do databáze')
             form = UploadFileForm()
         else:
@@ -84,7 +85,7 @@ def insert(request):
                 messages.warning(request, str(odpoved[2]) +r' chybných řádek souboru')
                 #return HttpResponseRedirect('insert.html')
             else:
-                messages.warning(request,'Vyberte správný soubor')
+                messages.warning(request,r'Vyberte správný soubor')
                 form = UploadFileForm()
     else:
         form = UploadFileForm()

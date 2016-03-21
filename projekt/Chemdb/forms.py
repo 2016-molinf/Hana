@@ -14,6 +14,11 @@ class UploadFileForm(forms.Form):
 
     def clean(self):
         data = self.cleaned_data['file']
-        print(data.content_type)
-        if data.content_type != 'text/plain' and data.content_type != 'application/octet-stream':
-            raise forms.ValidationError(u'Error message 123')
+        data1 = self.cleaned_data['type']
+        print(data1)
+        if data1 == 'SMILES':
+            if data.content_type != 'text/plain':
+                raise forms.ValidationError(u'Error message 123')
+        else:
+            if data.content_type != 'text/plain' and data.content_type != 'application/octet-stream':
+                raise forms.ValidationError(u'Error message 123')

@@ -5,6 +5,7 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
 
 from rdkit import Chem
+from rdkit.Chem import AllChem
 from rdkit.Chem import Draw
 
 from Chemdb.models import Structure
@@ -23,7 +24,10 @@ from .functions import handle_uploaded_file, handle_download_file
 # Create your views here.
 def structure_image(request, id):
     mol_obj = get_object_or_404(Structure, id=id)
+    #print(mol_obj.mol)
     mol = Chem.MolFromInchi(str(mol_obj.mol))
+    #mol = Chem.MolFromMolBlock(str(mol_obj.mol))
+    #print(mol)
     image = Draw.MolToImage(mol)
     response = HttpResponse(content_type="image/png")
     image.save(response,"PNG")
@@ -54,11 +58,12 @@ def insert(request):
         #print(Structure.objects.all())
     if request.method == "POST":
         #print(request.POST)
-        print(request.FILES)
+        #print(request.FILES)
         if 'mol' in request.POST.keys():
             mol = Structure.objects.values_list('mol')
-            smi = Chem.MolFromSmiles(request.POST['mol'])
+            smi = Chem.MolFromSmiles(str(request.POST['mol']))
             r = (Chem.MolToInchi(smi),)
+            #r = (Chem.MolToMolBlock(smi),)
             #print(r)
             #print(mol)
             if r in mol:
@@ -67,7 +72,10 @@ def insert(request):
             elif r == ('',):
                 pass
             else:
-                Structure(mol=Chem.MolToInchi(smi).save())
+                Structure(mol=Chem.MolToInchi(smi)).save()
+                #AllChem.Compute2DCoords(smi)
+                #mlk = Chem.MolToMolBlock(smi)
+                #Structure(mol=mlk).save()
                 messages.success(request, r'Struktura byla uložena do databáze')
             form = UploadFileForm()
         else:

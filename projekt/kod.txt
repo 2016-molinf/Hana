@@ -1,0 +1,11 @@
+        with open('media/tmp.txt', 'r') as soubor:
+            for radka in soubor:
+                radka.strip()
+                radka.strip("\n")
+                if (radka,) in mol or radka == '':
+                    odpoved[0] += 1
+                elif Chem.MolFromSmiles(radka) == None:
+                    odpoved[2] += 1
+                else:
+                    Structure(mol=radka).save()
+                    odpoved[1] += 1

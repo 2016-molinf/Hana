@@ -15,9 +15,14 @@ class UploadFileForm(forms.Form):
     def clean(self):
         data = self.cleaned_data['file']
         data1 = self.cleaned_data['type']
-        print(data1)
+        #print(data)
+        pripony = ['smi', 'smil', 'smiles', 'smile']
+        pripona = data.name.split(".")
+        #print(pripona)
         if data1 == 'SMILES':
-            if data.content_type != 'text/plain':
+            if data.content_type == 'text/plain' or pripona[1] in pripony:
+                pass
+            else:
                 raise forms.ValidationError(u'Error message 123')
         else:
             if data.content_type != 'text/plain' and data.content_type != 'application/octet-stream':

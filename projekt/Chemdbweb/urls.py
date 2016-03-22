@@ -24,8 +24,8 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'structures/(\d+)', Chemdb.views.structure_image),
     url(r'home', Chemdb.views.index),
-    url(r'', Chemdb.views.insert),
     url('insert', Chemdb.views.insert),
+    url(r'', Chemdb.views.index),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 #+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

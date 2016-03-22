@@ -2,6 +2,7 @@
 
 from Chemdb.models import Structure
 from rdkit import Chem
+from rdkit.Chem import AllChem
 
 
 def handle_uploaded_file(file, type):
@@ -12,7 +13,7 @@ def handle_uploaded_file(file, type):
             destination.write(chunk)
 
     odpoved = [0,0,0]
-
+    #mol = Structure.objects.values_list('mol')
     #print(mol)
     if type == 'SMILES':
         soubor = Chem.SmilesMolSupplier('media/tmp.txt')
@@ -20,6 +21,8 @@ def handle_uploaded_file(file, type):
             mol = Structure.objects.values_list('mol')
             try:
                 mlk = Chem.MolToInchi(mlk)
+                #AllChem.Compute2DCoords(mlk)
+                #mlk = Chem.MolToMolBlock(mlk)
             except:
                 odpoved[2] += 1
             else:
@@ -31,9 +34,12 @@ def handle_uploaded_file(file, type):
     else:
         soubor = Chem.SDMolSupplier('media/tmp.txt')
         for mlk in soubor:
+            #print(mlk)
             mol = Structure.objects.values_list('mol')
             try:
                 mlk = Chem.MolToInchi(mlk)
+               # AllChem.Compute2DCoords(mlk)
+                #mlk = Chem.MolToMolBlock(mlk)
             except:
                 odpoved[2] += 1
             else:
@@ -61,8 +67,11 @@ def handle_download_file(request):
     path = folder + filename
     writer = Chem.SDWriter(path)
     for m in mlk:
-        m = Chem.MolFromSmiles(str(m.mol))
+        m = Chem.MolFromInchi(str(m.mol))
+        AllChem.Compute2DCoords(m)
+        #m = Chem.MolToMolBlock(str(m.mol))
         #m = Chem.MolToMolBlock(m)
+        #m=str(m.mol)
         #print(m)
         writer.write(m)
     writer.close()

@@ -43,20 +43,7 @@
   <a href="#">Link5</a>
 </div>
 
-<!--div class="w3-container"-->
-{% if messages %}
-<div class="w3-center">
-    {% for message in messages %}
-    {% if message.tags == "warning" %}
-        <p  class=w3-red >{{message}}</p>
-        {% endif %}
-        {% if message.tags == "success" %}
-        <p  class=w3-green >{{message}}</p>
-        {% endif %}
-    {% endfor %}
-</div>
-{% endif %}
-<!--/div-->
+
 
 	<!-- RECOMMENDED if your web app will not function without JavaScript enabled -->
 	<noscript>
@@ -142,6 +129,19 @@
 
 {% endfor %}
 </table>
+{% if messages %}
+<div class="w3-center">
+    {% for message in messages %}
+    {% if message.tags == "warning" %}
+        <p  class=w3-red >{{message}}</p>
+        {% endif %}
+        {% if message.tags == "success" %}
+        <p  class=w3-green >{{message}}</p>
+        {% endif %}
+    {% endfor %}
+</div>
+{% endif %}
+
 <div class="w3-container w3-right-align">
     <br>
     {% csrf_token %}

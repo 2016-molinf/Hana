@@ -1,0 +1,3 @@
+
+Prepending PATH=/home/hana/miniconda3/bin to PATH in /home/hana/.bashrc
+A backup will be made to: /home/hana/.bashrc-miniconda3.bak

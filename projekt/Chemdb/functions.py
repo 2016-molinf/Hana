@@ -18,15 +18,20 @@ def handle_uploaded_file(file, type):
     if type == 'SMILES':
         soubor = Chem.SmilesMolSupplier('media/tmp.txt')
         for mlk in soubor:
+            print(mlk)
             mol = Structure.objects.values_list('mol')
             try:
+                #mlk = Chem.MolToSmiles(mlk)
                 mlk = Chem.MolToInchi(mlk)
+                print("a",mlk)
                 #AllChem.Compute2DCoords(mlk)
                 #mlk = Chem.MolToMolBlock(mlk)
             except:
                 odpoved[2] += 1
             else:
-                if (mlk,) in mol :
+                if mlk == "":
+                    odpoved[2] += 1
+                elif (mlk,) in mol :
                     odpoved[0] += 1
                 else:
                         Structure(mol=mlk).save()
@@ -76,6 +81,71 @@ def handle_download_file(request):
         writer.write(m)
     writer.close()
     return path, filename
+
+def handle_create_query(request):
+    dotaz = ''
+    dotaz1 = ''
+    dotaz2 = {}
+    dotaz3 = {}
+    ex = False
+
+    for i in request:
+        if i =='csrfmiddlewaretoken':
+            next
+        elif i == 'opMW':
+            if request['opMW'] == ">":
+                dotaz = "mol_weight__gt"
+            elif request['opMW'] == ">=":
+                dotaz = "mol_weight__gte"
+            elif request['opMW'] == "<":
+                dotaz = "mol_weight__lt"
+            elif request['opMW'] == ">=":
+                dotaz = "mol_weight__lte"
+            elif request['opMW'] == "!=":
+                dotaz = "mol_weight"
+                ex = True
+            elif request['opMW'] == "=":
+                dotaz = "mol_weight"
+        elif i == 'opSt':
+            if request['opSt'] == ">":
+                dotaz = "mol_stock__gt"
+            elif request['opSt'] == ">=":
+                dotaz = "mol_stock__gte"
+            elif request['opSt'] == "<":
+                dotaz = "mol_stock__lt"
+            elif request['opSt'] == ">=":
+                dotaz = "mol_stock__lte"
+            elif request['opSt'] == "!=":
+                dotaz = "mol_stock"
+                ex = True
+            elif request['opSt'] == "=":
+                dotaz = "mol_stock"
+        elif i == "obrazek":
+            d = Chem.MolFromSmiles(request[i])
+            mols = {}
+            for x in Structure.objects.all():
+                mols[x.id]=Chem.MolFromInchi(x.mol)
+            match = {k: d.HasSubstructMatch(v)for k, v in mols.items()}
+            klice = [k for k, v in match.items() if v]
+            dotaz2["id__in"] = klice
+        elif i == "mol_formula":
+            dotaz2["mol_formula"] = str(request[i])
+        elif i == "mol_name":
+            dotaz2["mol_name"] = str(request[i])
+        else:
+            dotaz1 = str(request[i])
+
+        if dotaz1 != '' and dotaz != '':
+            if ex:
+                dotaz3[dotaz] = dotaz1
+                ex = False
+            else:
+                dotaz2[dotaz] = dotaz1
+            dotaz = ''
+            dotaz1 = ''
+    return dotaz2, dotaz3
+
+
 
 
 

@@ -5,6 +5,14 @@ SOUBOR = (
     ('SMILES', 'SMILES'),
     ('SDF', 'SDF'),
 )
+OPERATORY = (
+    ('=','='),
+    ('!=','!='),
+    ('>=','>='),
+    ('<=','<='),
+    ('<','<'),
+    ('>','>'),
+)
 
 class UploadFileForm(forms.Form):
 
@@ -27,3 +35,17 @@ class UploadFileForm(forms.Form):
         else:
             if data.content_type != 'text/plain' and data.content_type != 'application/octet-stream':
                 raise forms.ValidationError(u'Error message 123')
+
+class Search(forms.Form):
+    mol_name = forms.CharField(label="Název sloučeniny",required=False,widget=forms.TextInput(attrs={'class':'w3-input w3-border w3-light-grey w3-hide', 'disabled':'true'}))
+    opMW = forms.ChoiceField(label="Typ souboru", required=False,choices=OPERATORY,widget=forms.Select(attrs={'class':'w3-select w3-border w3-hide','disabled':'true'}))
+    mol_weight = forms.DecimalField(label="Molekulová hmotnost",required=False,widget=forms.NumberInput(attrs={'class':'w3-input w3-border w3-light-grey w3-hide', 'step':'0.1', 'disabled':'true'}))
+    mol_formula = forms.CharField(label="Vzorec sloučeniny",required=False,widget=forms.TextInput(attrs={'class':'w3-input w3-border w3-light-grey w3-hide', 'disabled':'true'}))
+    opSt = forms.ChoiceField(label="Typ souboru", required=False,choices= OPERATORY,widget=forms.Select(attrs={'class':'w3-select w3-border w3-hide', 'disabled':'true'}))
+    mol_stock = forms.DecimalField(label="Stav zásob",required=False,widget=forms.NumberInput(attrs={'class':'w3-input w3-border w3-light-grey w3-hide', 'step':'0.1', 'disabled':'true'}))
+    obrazek = forms.CharField(label="Nakreslit hledanou molekulu",required=False,widget=forms.TextInput(attrs={'class':'w3-input w3-border w3-light-grey w3-hide','disabled':'true'}))
+
+    #def clean(self):
+       # data = self.cleaned_data
+
+        #print(data)

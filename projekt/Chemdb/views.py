@@ -16,10 +16,11 @@ from django.http import HttpResponseRedirect
 from django.http import FileResponse
 
 from django.shortcuts import render
-from .forms import UploadFileForm
+from .forms import UploadFileForm,Search
 # Imaginary function to handle an uploaded file.
-from .functions import handle_uploaded_file, handle_download_file
+from .functions import handle_uploaded_file, handle_download_file,handle_create_query
 
+from django.db.models import Q
 
 # Create your views here.
 def structure_image(request, id):
@@ -100,3 +101,42 @@ def insert(request):
 
     #structures = Structure.objects.all()
     return render(request, "Chemdb/insert.html", {"form": form})
+
+def search(request):
+    #print(Structure.objects.all())
+    structures = ''
+
+    if request.method == "POST":
+            #print(request.POST)
+            #print(request.FILES)
+
+            #print(request.FILES)
+            #print(request.POST)
+            form = Search(request.POST)
+            if form.is_valid():
+                dotaz,dotaz1 = handle_create_query(request.POST)
+                #print(dotaz,dotaz1)
+
+                if dotaz1 != '':
+                    structures = Structure.objects.filter(**dotaz).exclude(**dotaz1)
+                else:
+                    structures = Structure.objects.filter(**dotaz)
+
+
+                #messages.success(request, 'Soubor byl nahrán')
+                #odpoved = handle_uploaded_file(request.FILES['file'],request.POST['type'] )
+                #if type(odpoved) is str:
+                ##
+                # else:
+                #messages.success(request, str(odpoved[1]) +r' struktur uloženo do databáze')
+                #messages.warning(request, str(odpoved[0]) +r' ze struktur je již v databázi')
+                #messages.warning(request, str(odpoved[2]) +r' chybných řádek souboru')
+                #return HttpResponseRedirect('insert.html')
+            else:
+                messages.warning(request,r'Vyplňte všechna zvolená pole')
+                form = Search()
+    else:
+        form = Search()
+
+
+    return render(request, "Chemdb/search.html", {"form": form, "structures": structures})

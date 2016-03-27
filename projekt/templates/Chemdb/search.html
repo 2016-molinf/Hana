@@ -62,7 +62,7 @@
 
             <form action="search" method="post" enctype="multipart/form-data" class="w3-container">
                 {% csrf_token %}
-                <p id="mol_name" class="w3-btn w3-light-grey" onclick = hidEl(this)>{{ form.mol_name.label}}</p>
+                <!--p id="mol_name" class="w3-btn w3-light-grey" onclick = hidEl(this)>{{ form.mol_name.label}}</p-->
                 {{ form.mol_name }}
                 <p id="mol_weight" class="w3-btn w3-light-grey" onclick = hidEl(this)>{{ form.mol_weight.label }}</p>
                 <br>
@@ -112,6 +112,7 @@
     <th>Image</th>
     <th>Molecular weight</th>
     <th>Molecular formula</th>
+    <th>Stock</th>
 </tr>
 
 {% for structure in structures %}
@@ -123,6 +124,7 @@
 	<td onclick="location.href='structures/{{structure.id}}'"><img src="structures/{{structure.id}}"style="width:10%"></td>
 	<td onclick="location.href='structures/{{structure.id}}'">{{structure.round_mol_weight}}</td>
     <td onclick="location.href='structures/{{structure.id}}'">{{structure.mol_formula}}</td>
+    <td onclick="location.href='structures/{{structure.id}}'">{{structure.mol_stock}}</td>
 
 
 </tr>

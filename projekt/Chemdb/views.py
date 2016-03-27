@@ -133,4 +133,5 @@ def search(request):
         form = Search()
 
 
+
     return render(request, "Chemdb/search.html", {"form": form, "structures": structures})

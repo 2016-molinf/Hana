@@ -42,7 +42,7 @@ class Search(forms.Form):
     mol_weight = forms.DecimalField(label="Molekulová hmotnost",required=False,widget=forms.NumberInput(attrs={'class':'w3-input w3-border w3-light-grey w3-hide', 'step':'0.1', 'disabled':'true'}))
     mol_formula = forms.CharField(label="Vzorec sloučeniny",required=False,widget=forms.TextInput(attrs={'class':'w3-input w3-border w3-light-grey w3-hide', 'disabled':'true'}))
     opSt = forms.ChoiceField(label="Typ souboru", required=False,choices= OPERATORY,widget=forms.Select(attrs={'class':'w3-select w3-border w3-hide', 'disabled':'true'}))
-    mol_stock = forms.DecimalField(label="Stav zásob",required=False,widget=forms.NumberInput(attrs={'class':'w3-input w3-border w3-light-grey w3-hide', 'step':'0.1', 'disabled':'true'}))
+    mol_stock = forms.IntegerField(label="Stav zásob",required=False,widget=forms.NumberInput(attrs={'class':'w3-input w3-border w3-light-grey w3-hide', 'disabled':'true'}))
     obrazek = forms.CharField(label="Nakreslit hledanou molekulu",required=False,widget=forms.TextInput(attrs={'class':'w3-input w3-border w3-light-grey w3-hide','disabled':'true'}))
 
     #def clean(self):

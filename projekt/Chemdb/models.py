@@ -12,6 +12,7 @@ class Structure(models.Model):
     mol = models.TextField()
     mol_formula = models.TextField(default="NA")
     mol_weight = models.FloatField(default=0)
+    mol_stock = models.PositiveIntegerField(default=0)
     #mol = models
     """
     def __init__(self, mol):

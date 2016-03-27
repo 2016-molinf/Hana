@@ -51,6 +51,7 @@
     <th>Image</th>
     <th>Molecular weight</th>
     <th>Molecular formula</th>
+    <th>Stock</th>
 </tr>
 
 {% for structure in structures %}
@@ -62,6 +63,7 @@
 	<td onclick="location.href='structures/{{structure.id}}'"><img src="structures/{{structure.id}}"style="width:10%"></td>
 	<td onclick="location.href='structures/{{structure.id}}'">{{structure.round_mol_weight}}</td>
     <td onclick="location.href='structures/{{structure.id}}'">{{structure.mol_formula}}</td>
+    <td onclick="location.href='structures/{{structure.id}}'">{{structure.mol_stock}}</td>
 
 
 </tr>

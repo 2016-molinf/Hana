@@ -22,6 +22,7 @@ from .functions import handle_uploaded_file, handle_download_file,handle_create_
 
 from django.db.models import Q
 
+
 # Create your views here.
 def structure_image(request, id):
     mol_obj = get_object_or_404(Structure, id=id)
@@ -49,6 +50,12 @@ def index(request):
             response = FileResponse(open(path, 'rb'),content_type='application/download')
             response['Content-Disposition'] = 'attachment; filename={}'.format(filename)
             return response
+    elif request.method == "GET":
+        if request.GET.get('order_by',None):
+            order = request.GET.get('order_by',None)
+            print(order)
+            structures = Structure.objects.all().order_by(order)
+
 
 
     #print(structures)
@@ -105,13 +112,11 @@ def insert(request):
 def search(request):
     #print(Structure.objects.all())
     structures = []
+    form = Search()
 
     if request.method == "POST":
             #print(request.POST)
             #print(request.FILES)
-
-            #print(request.FILES)
-            #print(request.POST)
             form = Search(request.POST)
             if form.is_valid():
                 dotaz,dotaz1 = handle_create_query(request.POST)
@@ -129,9 +134,14 @@ def search(request):
             else:
                 #messages.warning(request,r'Vyplňte všechna zvolená pole')
                 form = Search()
-    else:
-        form = Search()
-
-
+    elif request.method == "GET":
+        try:
+            structures[0]
+        except:
+            pass
+        else:
+            if request.GET.get('order_by',None):
+                order = request.GET.get('order_by',None)
+                structures = Structure.objects.all().order_by(order)
 
     return render(request, "Chemdb/search.html", {"form": form, "structures": structures})

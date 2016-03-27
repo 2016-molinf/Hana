@@ -170,4 +170,9 @@
             }
         }
     }
-
+    function color(ele){
+        if (ele.id == "0"){
+            var i = document.getElementById("mood")
+            i.className = 'material-icons'
+        }
+    }

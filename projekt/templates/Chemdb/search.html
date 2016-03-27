@@ -108,11 +108,11 @@
 
 <tr class="w3-orange">
     <th><input id="input-select-all" class="w3-check" type="checkbox" name="mlk_all" id="mlk_all"  value="all"  onchange="checkAll(this)" /></th>
-    <th>ID</th>
+    <th>ID</ID><a href="?order_by=id"><i class="material-icons">arrow_drop_up</i></a><a href="?order_by=-id"><i class="material-icons">arrow_drop_down</i></a></th>
     <th>Image</th>
-    <th>Molecular weight</th>
-    <th>Molecular formula</th>
-    <th>Stock</th>
+    <th>Molecular weight<a href="?order_by=mol_weight"><i class="material-icons">arrow_drop_up</i></a><a href="?order_by=-mol_weight"><i class="material-icons">arrow_drop_down</i></a></th>
+    <th>Molecular formula<a href="?order_by=mol_formula"><i class="material-icons">arrow_drop_up</i></a><a href="?order_by=-mol_formula"><i class="material-icons">arrow_drop_down</i></a></th>
+    <th>Stock<a href="?order_by=mol_stock"><i class="material-icons">arrow_drop_up</i></a><a href="?order_by=-mol_stock"><i class="material-icons">arrow_drop_down</i></a></th>
 </tr>
 
 {% for structure in structures %}
@@ -124,7 +124,7 @@
 	<td onclick="location.href='structures/{{structure.id}}'"><img src="structures/{{structure.id}}"style="width:10%"></td>
 	<td onclick="location.href='structures/{{structure.id}}'">{{structure.round_mol_weight}}</td>
     <td onclick="location.href='structures/{{structure.id}}'">{{structure.mol_formula}}</td>
-    <td onclick="location.href='structures/{{structure.id}}'">{{structure.mol_stock}}</td>
+    <td onload="color(this)" id="{{structure.mol_stock}}" onclick="location.href='structures/{{structure.id}}'">{{structure.mol_stock}}<i id="mood" class="material-icons w3-hide">mood_bad</i></td>
 
 
 </tr>

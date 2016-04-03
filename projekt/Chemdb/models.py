@@ -12,7 +12,7 @@ class Structure(models.Model):
     mol = models.TextField()
     mol_formula = models.TextField(default="NA")
     mol_weight = models.FloatField(default=0)
-    mol_stock = models.PositiveIntegerField(default=0)
+    mol_stock = models.FloatField(default=0)
     #mol = models
     """
     def __init__(self, mol):
@@ -36,6 +36,9 @@ class Structure(models.Model):
 
     def round_mol_weight(self):
         return round(self.mol_weight,3)
+
+    def round_mol_stock(self):
+        return round(self.mol_stock,3)
 """
     def save_to_file(self,iddb):
         data = Chem.MolToMolFile(Chem.MolFromSmiles(str(self.mol)))

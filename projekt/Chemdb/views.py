@@ -16,9 +16,9 @@ from django.http import HttpResponseRedirect
 from django.http import FileResponse
 
 from django.shortcuts import render
-from .forms import UploadFileForm,Search
+from .forms import UploadFileForm,Search,Stock
 # Imaginary function to handle an uploaded file.
-from .functions import handle_uploaded_file, handle_download_file,handle_create_query
+from .functions import handle_uploaded_file, handle_download_file,handle_create_query,handle_change_stock
 
 from django.db.models import Q
 
@@ -50,6 +50,8 @@ def index(request):
             response = FileResponse(open(path, 'rb'),content_type='application/download')
             response['Content-Disposition'] = 'attachment; filename={}'.format(filename)
             return response
+        else:
+            messages.warning(request,"Nevybrali jste žádnou sloučeninu")
     elif request.method == "GET":
         if request.GET.get('order_by',None):
             order = request.GET.get('order_by',None)
@@ -115,15 +117,28 @@ def search(request):
     form = Search()
 
     if request.method == "POST":
+        if 'mlk_all' in request.POST.keys() or 'mlk_id' in request.POST.keys():
+            if 'mlk_all' in request.POST.keys():
+                path, filename = handle_download_file(request.POST['mlk_all'])
+            elif 'mlk_id' in request.POST.keys():
+                path, filename = handle_download_file(request.POST.getlist('mlk_id'))
+            #with open(path, mode="r", encoding="utf-8") as f:
+                #response = HttpResponse(FileWrapper(f),content_type='application/download')
+            response = FileResponse(open(path, 'rb'),content_type='application/download')
+            response['Content-Disposition'] = 'attachment; filename={}'.format(filename)
+            return response
+        else:
             #print(request.POST)
             #print(request.FILES)
             form = Search(request.POST)
             if form.is_valid():
                 dotaz,dotaz1 = handle_create_query(request.POST)
-                #print(dotaz,dotaz1)
+                print(dotaz,dotaz1)
 
-                if dotaz1 != '':
+                if dotaz1 != {}:
                     structures = Structure.objects.filter(**dotaz).exclude(**dotaz1)
+                elif dotaz == {}:
+                    pass
                 else:
                     structures = Structure.objects.filter(**dotaz)
                 print(structures)
@@ -145,3 +160,49 @@ def search(request):
                 structures = Structure.objects.all().order_by(order)
 
     return render(request, "Chemdb/search.html", {"form": form, "structures": structures})
+
+def chemical(request):
+    form = Stock()
+    structures = []
+    if request.method == "POST":
+        form = Stock(request.POST)
+        if form.is_valid():
+            #print("a",request.POST)
+            if request.POST['mol_stock'] == '' and request.POST['get_id'] != '':
+                path, filename = handle_download_file(request.POST.getlist('get_id'))
+                response = FileResponse(open(path, 'rb'),content_type='application/download')
+                response['Content-Disposition'] = 'attachment; filename={}'.format(filename)
+                #return response
+            elif request.POST['mol_stock'] == '' and request.POST['get_id'] == '':
+                messages.warning(request, str(r' Nezadali jste žádnou hodnotu'))
+            elif request.POST['mol_stock'] != '' and request.POST['get_id'] != '':
+                #print(request.POST['mol_stock'])
+                change, path, filename = handle_change_stock(request.POST['mol_stock'],request.POST['get_id'])
+                if change < 0:
+                     messages.warning(request, str(r'Na skladě je o  ')+str(round(abs(change),3))+str(r' ml méně než požadujete'))
+                     messages.warning(request, str(r'Pro doplnění zásob kontaktujte obsluhu skladu'))
+                elif float(request.POST['mol_stock']) < 0 and change > 0:
+                    #messages.success(request, str(r'Děkujeme, informace o objednávce naleznete v právě staženém pdf '))
+                    response = FileResponse(open(path, 'rb'),content_type='application/download')
+                    response['Content-Disposition'] = 'attachment; filename={}'.format(filename)
+                    #return response
+                elif float(request.POST['mol_stock']) > 0:
+                    messages.success(request, str(r'Na skladě je nyní o  ')+str(round(abs(change),3))+str(r' ml více'))
+
+
+    #if request.method == "GET":
+    if request.GET.get('chem_id',None):
+        chem_id = request.GET.get('chem_id',None)
+        structures = Structure.objects.filter(id=chem_id)
+        #print("b", chem_id, structures)
+    try:
+        response
+    #print("c",structures)#, "structures": structures}
+    except:
+        return render(request, "Chemdb/chemical.html", {"form": form, "structures": structures})
+    else:
+        return response
+def about(request):
+    return render(request, "Chemdb/about.html")
+def contact(request):
+    return render(request, "Chemdb/contact.html")

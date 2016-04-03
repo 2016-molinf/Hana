@@ -26,6 +26,9 @@ urlpatterns = [
     url(r'home', Chemdb.views.index),
     url('insert', Chemdb.views.insert),
     url('search', Chemdb.views.search),
+    url('chemical', Chemdb.views.chemical),
+    url('about', Chemdb.views.about),
+    url('contact', Chemdb.views.contact),
     url(r'', Chemdb.views.index),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 

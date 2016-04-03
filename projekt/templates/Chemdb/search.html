@@ -1,47 +1,11 @@
-<!doctype html>
-<!-- The DOCTYPE declaration above will set the     -->
-<!-- browser's rendering engine into                -->
-<!-- "Standards Mode". Replacing this declaration   -->
-<!-- with a "Quirks Mode" doctype is not supported. -->
-
-<html>
-<head>
-<meta http-equiv="content-type" content="text/html; charset=UTF-8">
-
-<title>Chemdb demo page</title>
-
-<link href="static/css/w3.css" rel="stylesheet" type="text/css">
-<link rel="stylesheet" href="http://www.w3schools.com/lib/w3.css">
-<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-
-
-<script type="text/javascript" language="javascript" src="static/jsme/jsme.nocache.js"></script>
-
-<script type="text/javascript" language="javascript" src="static/js/skripty.js"></script>
-
-
-</head>
-
-
-<body class="w3-container">
-<ul class="w3-navbar w3-orange w3-small ">
-  <li class="w3-right"><a href="admin/">admin <i class="material-icons">person</i></a></li>
-</ul>
-
+{% include "Chemdb/head.html" %}
 
 <div class="w3-light-grey w3-container w3-padding-64 w3-center">
   <h1 class="w3-jumbo">Sklad chemikálií</h1>
   <p>Vyhledat chemikálie</p>
 </div>
 
-<div class="w3-topnav w3-large w3-center w3-orange">
-  <a href="home">Home</a>
-  <a href="insert">Vložit</a>
-  <a href="search">Hledat</a>
-  <a href="#">Link3</a>
-  <a href="#">Link4</a>
-  <a href="#">Link5</a>
-</div>
+{% include "Chemdb/menu.html" %}
 
 
 
@@ -58,7 +22,7 @@
 
 
 <div class="w3-quarter w3-center">
- <div class="w3-orange w3-border w3-xlarge w3-bordered w3-striped w3-border w3-hoverable w3-card-4" >Hledat</div>
+ <div class="w3-orange w3-border w3-xlarge w3-bordered w3-striped w3-border w3-hoverable w3-card-4" style="height: 1.55cm">Hledat</div>
 
             <form action="search" method="post" enctype="multipart/form-data" class="w3-container">
                 {% csrf_token %}
@@ -90,66 +54,20 @@
             <!--div onclick="saveMolecule()"-->
                 <!--input  name="id_obr" id="id_obr"-->
                 <!--input type="submit"-->
-                <p id="odeslat" class="w3-btn w3-hide w3-orange w3-border w3-round" onclick="saveMoleculeSearch()">Odeslat do formulare</p>
+                <!--p id="odeslat" class="w3-btn w3-hide w3-orange w3-border w3-round" onclick="saveMoleculeSearch()">Odeslat do formulare</p-->
             <!--/div-->
-                    <br>
+                    <!--br-->
                 {{form.obrazek}}
                 <br>
                 <!--input type="submit" id="submit" value="Submit File" /-->
-                <button class="w3-btn w3-orange w3-border w3-round ">Hledat</button>
+                <button class="w3-btn w3-orange w3-border w3-round " onclick="saveMoleculeSearch()">Hledat</button>
 
             </form>
 
     </div>
 
  <div class="w3-rest">
-     <form method="POST">
-<table class="w3-table w3-bordered w3-striped w3-border w3-hoverable w3-card-4">
-
-<tr class="w3-orange">
-    <th><input id="input-select-all" class="w3-check" type="checkbox" name="mlk_all" id="mlk_all"  value="all"  onchange="checkAll(this)" /></th>
-    <th>ID</ID><a href="?order_by=id"><i class="material-icons">arrow_drop_up</i></a><a href="?order_by=-id"><i class="material-icons">arrow_drop_down</i></a></th>
-    <th>Image</th>
-    <th>Molecular weight<a href="?order_by=mol_weight"><i class="material-icons">arrow_drop_up</i></a><a href="?order_by=-mol_weight"><i class="material-icons">arrow_drop_down</i></a></th>
-    <th>Molecular formula<a href="?order_by=mol_formula"><i class="material-icons">arrow_drop_up</i></a><a href="?order_by=-mol_formula"><i class="material-icons">arrow_drop_down</i></a></th>
-    <th>Stock<a href="?order_by=mol_stock"><i class="material-icons">arrow_drop_up</i></a><a href="?order_by=-mol_stock"><i class="material-icons">arrow_drop_down</i></a></th>
-</tr>
-
-{% for structure in structures %}
-
-<tr >
-
-	<td ><input class="w3-check" type="checkbox" name="mlk_id"  value="{{ structure.id }}"  /></td>
-    <td onclick="location.href='structures/{{structure.id}}'">{{structure.mol_id}}</td>
-	<td onclick="location.href='structures/{{structure.id}}'"><img src="structures/{{structure.id}}"style="width:10%"></td>
-	<td onclick="location.href='structures/{{structure.id}}'">{{structure.round_mol_weight}}</td>
-    <td onclick="location.href='structures/{{structure.id}}'">{{structure.mol_formula}}</td>
-    <td onload="color(this)" id="{{structure.mol_stock}}" onclick="location.href='structures/{{structure.id}}'">{{structure.mol_stock}}<i id="mood" class="material-icons w3-hide">mood_bad</i></td>
-
-
-</tr>
-
-{% endfor %}
-</table>
-{% if messages %}
-<div class="w3-center">
-    {% for message in messages %}
-    {% if message.tags == "warning" %}
-        <p  class=w3-red >{{message}}</p>
-        {% endif %}
-        {% if message.tags == "success" %}
-        <p  class=w3-green >{{message}}</p>
-        {% endif %}
-    {% endfor %}
-</div>
-{% endif %}
-
-<div class="w3-container w3-right-align">
-    <br>
-    {% csrf_token %}
-    <button class="w3-btn w3-orange w3-border w3-round ">Stáhnout vybrané molekuly</button>
-</div>
-</form>
+  {% include "Chemdb/tabulkaStruktur.html" %}
 
 
 </div>

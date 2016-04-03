@@ -3,6 +3,7 @@
 from Chemdb.models import Structure
 from rdkit import Chem
 from rdkit.Chem import AllChem
+from reportlab.pdfgen import canvas
 
 
 def handle_uploaded_file(file, type):
@@ -144,6 +145,44 @@ def handle_create_query(request):
             dotaz = ''
             dotaz1 = ''
     return dotaz2, dotaz3
+
+def handle_change_stock(request,id):
+    folder = "media/"
+    mapa = "Chemdb/static/obr/pata_mapa.jpg"
+    mlk = Structure.objects.get(id=id)
+    filename = "Objednavka_MINF-HD-{}.pdf".format(mlk.id)
+    path = folder + filename
+    change = mlk.mol_stock
+    change += float(request)
+    if change < 0:
+        return change,path, filename
+    else:
+        if float(request) < 0:
+            p = canvas.Canvas(path)
+            #p.drawString(100, 100, "Hello world.")
+            p.setFont("Helvetica", 25)
+            p.drawString(230, 790,"Objednávka")
+            p.setFont("Helvetica", 14)
+            p.drawString(10, 750,"ID: MINF-HD-"+str(mlk.id))
+            p.drawString(10, 730,"Objednáno: "+str(abs(float(request)))+" ml")
+            p.drawString(10, 710,"Místo vyzvednutí: Budova A")
+            p.drawImage(mapa, 10,450, width=170,height=240,mask=None)
+            p.showPage()
+            p.save()
+            """
+            with open(path,mode="w",encoding="utf-8") as obj:
+                obj.write("Objednávka")
+                obj.write("ID: MINF-HD-"+str(mlk.id))
+                obj.write("Objednáno: "+str(abs(change))+" ml")
+                obj.write("Místo vyzvednutí:")
+                #obj.write(obrazek)
+            """
+        mlk.mol_stock += float(request)
+        mlk.save()
+        return change, path, filename
+
+
+
 
 
 

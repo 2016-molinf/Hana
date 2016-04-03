@@ -9,3 +9,6 @@
                 else:
                     Structure(mol=radka).save()
                     odpoved[1] += 1
+                    
+                    
+                    {% include "_molecules_table.html" %}

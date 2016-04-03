@@ -1,0 +1,82 @@
+
+{% include "Chemdb/head.html" %}
+
+{% for structure in structures %}
+
+<div class="w3-light-grey w3-container w3-padding-64 w3-center" >
+  <h1 class="w3-jumbo">Sklad chemikálií</h1>
+  <p>{{ structure.mol_id }}</p>
+</div>
+
+{% include "Chemdb/menu.html" %}
+
+<div class="w3-third  w3-center" onclick="location.href='structures/{{structure.id}}'">
+    <img src="structures/{{structure.id}}">
+</div>
+<div class="w3-twothird">
+<br>
+<br>
+<form action="/chemical?chem_id={{structure.id}}" method="post" class="w3-container">
+<table class="w3-table w3-bordered w3-striped w3-border w3-card-4" >
+
+
+<tr>
+    <th>ID:</th>
+    <td>{{structure.mol_id}}</td>
+    <td></td>
+</tr>
+<tr>
+    <th>Molecular weight:</th>
+    <td>{{structure.round_mol_weight}} g/mol</td>
+    <td></td>
+</tr>
+<tr>
+    <th>Molecular formula:</th>
+   <td>{{structure.mol_formula}}</td>
+    <td></td>
+</tr>
+<tr>
+    <th>Stock:</th>
+    {% if structure.mol_stock < 100 %}
+        <td>{{structure.round_mol_stock}}<i class="material-icons" style="color:red">warning</i></td>
+    {% else %}
+        <td>{{structure.round_mol_stock}}</td>
+    {% endif %}
+    <td></td>
+</tr>
+<tr>
+    <th>{{ form.mol_stock.label }}</th>
+    <td>{{ form.mol_stock }}ml</td>
+    <td><button id="conf" class="w3-btn w3-orange w3-border w3-round "onclick="changeValue(this)">Potvrdit</button></td>
+</tr>
+
+
+</table>
+{% if messages %}
+<div class="w3-center">
+    {% for message in messages %}
+    {% if message.tags == "warning" %}
+        <p  class=w3-red >{{message}}</p>
+        {% endif %}
+        {% if message.tags == "success" %}
+        <p  class=w3-green >{{message}}</p>
+        {% endif %}
+    {% endfor %}
+</div>
+{% endif %}
+<div class="w3-container w3-right-align">
+    <br>
+    {% csrf_token %}
+    <input id="chem_id" value="{{structure.id}}" class="w3-hide">
+    <input type="hidden" id="get_id" name="get_id" >
+    <button id="dow" class="w3-btn w3-orange w3-border w3-round " onclick="changeValue(this)">Stáhnout molekulu</button>
+</div>
+</form>
+
+</div>
+
+{% endfor %}
+
+</body>
+
+</html>

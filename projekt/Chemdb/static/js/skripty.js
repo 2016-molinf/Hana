@@ -120,13 +120,13 @@
                 hid.required = true;
             }else if (hid.id == 'id_obrazek'){
                 var hid2 = document.getElementById('appletContainer');
-                var hid3 = document.getElementById('odeslat');
+                //var hid3 = document.getElementById('odeslat');
                 hid.disabled = false;
-                hid.className = 'w3-input w3-border w3-light-grey';
+                //hid.className = 'w3-input w3-border w3-light-grey';
                 hid2.disabled = false;
                 hid2.hidden = false;
-                hid3.disabled = false;
-                hid3.className = "w3-btn w3-orange w3-border w3-round";
+                //hid3.disabled = false;
+                //hid3.className = "w3-btn w3-orange w3-border w3-round";
                 hid.required = true;
 
             } else {
@@ -154,13 +154,13 @@
                 hid.required = false;
             }else if (hid.id == 'id_obrazek'){
                 var hid2 = document.getElementById('appletContainer');
-                var hid3 = document.getElementById('odeslat');
+                //var hid3 = document.getElementById('odeslat');
                 hid.disabled = true;
-                hid.className = 'w3-input w3-border w3-light-grey w3-hide';
+               // hid.className = 'w3-input w3-border w3-light-grey w3-hide';
                 hid2.disabled = true;
                 hid2.hidden = true;
-                hid3.disabled = true;
-                hid3.className = "w3-btn w3-hide w3-orange w3-border w3-round";
+               // hid3.disabled = true;
+               // hid3.className = "w3-btn w3-hide w3-orange w3-border w3-round";
                 hid.required = false;
 
             } else {
@@ -170,9 +170,20 @@
             }
         }
     }
-    function color(ele){
-        if (ele.id == "0"){
-            var i = document.getElementById("mood")
-            i.className = 'material-icons'
+    function changeValue(val){
+        if (val.id == "dow"){
+            var val1 = document.getElementById('id_mol_stock');
+            var val2 = document.getElementById('get_id');
+            var val3 = document.getElementById('chem_id');
+            val1.value = ''
+            val2.value = val3.value
         }
+        else{
+            var val2 = document.getElementById('get_id');
+            var val3 = document.getElementById('chem_id');
+            val2.value = val3.value
+        }
+
+
     }
+

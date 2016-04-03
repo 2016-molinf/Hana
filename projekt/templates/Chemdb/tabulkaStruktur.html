@@ -1,0 +1,50 @@
+
+<form method="POST">
+<table class="w3-table w3-bordered w3-striped w3-border w3-hoverable w3-card-4" >
+
+<tr class="w3-orange">
+    <th><input id="input-select-all" class="w3-check" type="checkbox" name="mlk_all" id="mlk_all"  value="all"  onchange="checkAll(this)" /></th>
+    <th>ID<a href="?order_by=id"><i class="material-icons">arrow_drop_up</i></a><a href="?order_by=-id"><i class="material-icons">arrow_drop_down</i></a></th>
+    <th>Image</th>
+    <th>Molecular weight [g/mol]<a href="?order_by=mol_weight"><i class="material-icons">arrow_drop_up</i></a><a href="?order_by=-mol_weight"><i class="material-icons">arrow_drop_down</i></a></th>
+    <th>Molecular formula<a href="?order_by=mol_formula"><i class="material-icons">arrow_drop_up</i></a><a href="?order_by=-mol_formula"><i class="material-icons">arrow_drop_down</i></a></th>
+    <th>Stock [ml]<a href="?order_by=mol_stock"><i class="material-icons">arrow_drop_up</i></a><a href="?order_by=-mol_stock"><i class="material-icons">arrow_drop_down</i></a></th>
+</tr>
+
+{% for structure in structures %}
+
+<tr style="cursor: pointer">
+
+	<td ><input class="w3-check" type="checkbox" name="mlk_id"  value="{{ structure.id }}"  /></td>
+    <td onclick="location.href='chemical?chem_id={{structure.id}}'">{{structure.mol_id}}</td>
+	<td onclick="location.href='chemical?chem_id={{structure.id}}'"><img src="structures/{{structure.id}}"style="width:10%"></td>
+	<td onclick="location.href='chemical?chem_id={{structure.id}}'">{{structure.round_mol_weight}}</td>
+    <td onclick="location.href='chemical?chem_id={{structure.id}}'">{{structure.mol_formula}}</td>
+    {% if structure.mol_stock < 100 %}
+        <td onclick="location.href='chemical?chem_id={{structure.id}}'" >{{structure.round_mol_stock}}<i class="material-icons" style="color:red">warning</i></td>
+    {% else %}
+        <td onclick="location.href='chemical?chem_id={{structure.id}}'" >{{structure.round_mol_stock}}</td>
+    {% endif %}
+
+</tr>
+
+{% endfor %}
+</table>
+{% if messages %}
+<div class="w3-center">
+    {% for message in messages %}
+    {% if message.tags == "warning" %}
+        <p  class=w3-red >{{message}}</p>
+        {% endif %}
+        {% if message.tags == "success" %}
+        <p  class=w3-green >{{message}}</p>
+        {% endif %}
+    {% endfor %}
+</div>
+{% endif %}
+<div class="w3-container w3-right-align">
+    <br>
+    {% csrf_token %}
+    <button class="w3-btn w3-orange w3-border w3-round ">Stáhnout vybrané molekuly</button>
+</div>
+</form>

@@ -30,8 +30,10 @@
 			Your web browser must have JavaScript enabled in order for this
 			application to display correctly.</div>
 	</noscript>
-	
-<div class="w3-half">
+<div class="w3-card-4 w3-light-grey">
+<div class="w3-row">
+
+<div class="w3-col" style="width:50%">
             <p id="appletContainer">  </p>
 
             <form method="POST" onsubmit="saveMolecule()" >
@@ -41,7 +43,7 @@
                 <button class="w3-btn w3-orange w3-border w3-round">Odeslat</button>
             </form>
 </div>
-<div class="w3-half">
+<div class="w3-col" style="width:50%">
             <form action="insert" method="post" enctype="multipart/form-data">
                 {{ form }}
                 <!--input type="submit" id="submit" value="Submit File" /-->
@@ -49,8 +51,9 @@
                 {% csrf_token %}
             </form>
 </div>
-</body>
+</div>
+</div>
 
-</html>
+{% include "Chemdb/foot.html" %}
 
 
